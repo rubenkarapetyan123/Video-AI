@@ -18,3 +18,41 @@ header{
   display: flex;
   width: fit-content;
 }
+.header-buttons-container{
+  width: 30%;
+  height: auto;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.header-login-button{
+  border: 1px var(--violet) solid;
+  background-color: var(--white);
+  color: var(--violet);
+}
+.header-login-button:hover{
+  border: 1px var(--white) solid;
+  background-color: var(--violet);
+  color: var(--white);
+}
+.header-register-button{
+  border: 1px var(--white) solid;
+  background-color: var(--violet);
+  color: var(--white);
+}
+.header-register-button:hover{
+  border: 1px var(--violet) solid;
+  background-color: var(--white);
+  color: var(--violet);
+}
+.header-button{
+  cursor: pointer;
+  width: 70px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  border-radius: 15px;
+}

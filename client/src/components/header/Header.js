@@ -8,8 +8,10 @@ function Header(){
   return (
     <header>
       <Logo/>
-      <HeaderButton text={"Login"} className={"header-login-button"} route={LOGIN}/>
-      <HeaderButton text={"Register"} className={"header-register-button"} route={REGISTER}/>
+      <div className="header-buttons-container">
+        <HeaderButton text={"Sign in"} className={"header-login-button"} route={LOGIN}/>
+        <HeaderButton text={"Sign up"} className={"header-register-button"} route={REGISTER}/>
+      </div>
       </header>
   )
 }
