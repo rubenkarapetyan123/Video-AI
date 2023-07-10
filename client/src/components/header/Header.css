@@ -3,4 +3,18 @@ header{
   width: 100%;
   position: sticky;
   top: 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.logo-container{
+  display: flex;
+  width: 30%;
+  height: auto;
+  justify-content: center;
+}
+
+.logo-link{
+  display: flex;
+  width: fit-content;
 }
