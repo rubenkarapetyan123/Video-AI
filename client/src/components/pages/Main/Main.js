@@ -1,8 +1,11 @@
+import FormInput from "../../usable/FormInput"
 
 function Main(){
   return (
     <p>
-      main
+      <input 
+        type="file"
+      />
     </p>
   )
 }
