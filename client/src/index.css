@@ -15,5 +15,6 @@ code {
 
 :root{
   --violet : rgb(126, 40, 150);
-  --white : rgb(255,255,255)
+  --white : rgb(255,255,255);
+  --beforeViolet : rgb(156, 40, 188);
 }

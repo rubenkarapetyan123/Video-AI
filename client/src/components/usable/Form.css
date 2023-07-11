@@ -19,7 +19,7 @@
   margin-top: 25px;
   border-radius: 10px;
   border: 0.5px gray solid;
-  background-color: rgb(126, 19, 147);
+  background-color: var(--beforeViolet);
   color: white;
 }
 
