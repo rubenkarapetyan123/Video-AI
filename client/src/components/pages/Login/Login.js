@@ -13,10 +13,29 @@ function Login(){
     ...inputData,password : e.target.value})
 
 
+
+    const submitHandle = async e =>{
+      e.preventDefault()
+      try{
+        const response = await fetch("/login",{
+          method : "POST",
+          headers : {
+            "Content-Type" : "application/json"
+          },
+          body : JSON.stringify(inputData)
+        })
+        const res = await response.json()
+        console.log(res);
+      }catch(err){
+        console.log(err)
+      }
+    }
+
+
   return (
     <div className="reg-container">
         <h1>Login</h1>
-        <form className="reg-container">
+        <form className="reg-container" onSubmit={submitHandle}>
           <FormInput
             type={"email"}
             value={inputData.email}

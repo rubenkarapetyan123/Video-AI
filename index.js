@@ -1,5 +1,5 @@
 import express from "express";
-import { REGISTER } from "./constants/routes-constants.js";
+import { LOGIN, REGISTER } from "./constants/routes-constants.js";
 
 const app = express()
 app.use(express.urlencoded({extended : true}))
@@ -16,6 +16,14 @@ app.get("/test",(req,res)=>{
 app.post(REGISTER,(req,res)=>{
   const { username, email, password } = req.body
   console.log(username, email, password);
+  res.send({
+    access : true
+  })
+})
+
+app.post(LOGIN,(req,res)=>{
+  const { email, password } = req.body
+  console.log(email, password);
   res.send({
     access : true
   })
