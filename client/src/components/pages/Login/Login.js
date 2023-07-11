@@ -16,7 +16,7 @@ function Login(){
   return (
     <div className="reg-container">
         <h1>Login</h1>
-        <form>
+        <form className="reg-container">
           <FormInput
             type={"email"}
             value={inputData.email}
