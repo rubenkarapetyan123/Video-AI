@@ -47,6 +47,7 @@ header{
   color: var(--violet);
 }
 .header-button{
+  transition: 1s;
   cursor: pointer;
   width: 70px;
   height: 40px;

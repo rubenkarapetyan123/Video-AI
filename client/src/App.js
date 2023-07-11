@@ -7,9 +7,12 @@ import Router from "./routing/Router";
 function App() {
   return (
     <BrowserRouter>
-      <Header/>
-      <Router/>
-      <Footer/>
+      <main>
+        <Header/>
+        <Router/>
+        {/* <Footer/>  */}
+      </main>
+      
     </BrowserRouter>
   );
 }
