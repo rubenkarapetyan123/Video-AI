@@ -10,7 +10,6 @@ function Main(){
 
     const formData = new FormData();
     formData.append("image",e.target.files[0])
-    setFile(e.target.files[0])
 
     try{
       const response = await fetch("/image",{
@@ -21,6 +20,7 @@ function Main(){
         body : formData
       })
       const res = await response.json()
+      setFile(res.img)
       console.log(res);
     }catch(err){
       console.log(err);
@@ -30,7 +30,7 @@ function Main(){
     <div className="main-container">
       <div className="img-selector-container">
         <div className="image-load-container">
-          <ImageIcon/>
+          {file ? <img src={file} alt="image" className="main-image"/> : <ImageIcon/>}
         </div>
         <input 
           onChange={chooseFileHandle}

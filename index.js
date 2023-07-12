@@ -1,13 +1,29 @@
 import express from "express";
-import { LOGIN, REGISTER } from "./constants/routes-constants.js";
+import { IMAGE, LOGIN, REGISTER } from "./constants/routes-constants.js";
 import fs from "fs"
 import { nanoid } from "nanoid";
 import bcrypt from "bcrypt"
 import { log } from "console";
-import { JwtStrategy, ExtractJwt } from "passport-jwt"
+import jwt from "passport-jwt"
 import passport from "passport"
+import multer from "multer";
+const { JwtStrategy, ExtractJwt } = jwt
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './images')
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.fieldname + '-' + nanoid(8) + ".png")
+  }
+})
+
+const upload = multer({ storage : storage })
+
 
 const app = express()
+
+app.use(express.static("./images/"))
 app.use(express.urlencoded({extended : true}))
 app.use(express.json())
 app.use(passport.initialize())
@@ -17,7 +33,7 @@ const config = {
   secretOrKey : process.env.JWT_SECRET,
 }
 
-passport.use(new JwtStrategy(config, function(payload, done) {
+// passport.use(new JwtStrategy(config, function(payload, done) {
   // const users = fs.readFileSync("./database/users.json",{encoding : "utf8", flag : "r"})
   // const user = users[payload.sub]
   // if(!user){
@@ -34,15 +50,15 @@ passport.use(new JwtStrategy(config, function(payload, done) {
   //         // or you could create a new account
   //     }
   // })
-}))
+// }))
 
-app.get("/test",(req,res)=>{
+app.post(IMAGE,upload.single("image"),(req,res)=>{
+  console.log(req.file);
   res.send({
     access : true,
-    type : "test"
+    img : req.file.filename
   })
 })
-
 
 app.post(REGISTER,async (req,res)=>{
   const { username, email, password } = req.body

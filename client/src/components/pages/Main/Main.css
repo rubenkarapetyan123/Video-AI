@@ -54,7 +54,10 @@
   justify-content: center;
   align-items: center;
 }
-
+.main-image{
+  width: 200px;
+  height: auto;
+}
 .image-selector:active::before {
   background: -webkit-linear-gradient(top, #e3e3e3, #f9f9f9);
 }
