@@ -4,10 +4,37 @@ import fs from "fs"
 import { nanoid } from "nanoid";
 import bcrypt from "bcrypt"
 import { log } from "console";
+import { JwtStrategy, ExtractJwt } from "passport-jwt"
+import passport from "passport"
 
 const app = express()
 app.use(express.urlencoded({extended : true}))
 app.use(express.json())
+app.use(passport.initialize())
+
+const config = {
+  jwtFromRequest : ExtractJwt.fromAuthHeaderAsBearerToken(),
+  secretOrKey : process.env.JWT_SECRET,
+}
+
+passport.use(new JwtStrategy(config, function(payload, done) {
+  // const users = fs.readFileSync("./database/users.json",{encoding : "utf8", flag : "r"})
+  // const user = users[payload.sub]
+  // if(!user){
+  //   return done()
+  // }
+  // User.findOne({id: jwt_payload.sub}, function(err, user) {
+  //     if (err) {
+  //         return done(err, false);
+  //     }
+  //     if (user) {
+  //         return done(null, user);
+  //     } else {
+  //         return done(null, false);
+  //         // or you could create a new account
+  //     }
+  // })
+}))
 
 app.get("/test",(req,res)=>{
   res.send({
