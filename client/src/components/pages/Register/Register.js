@@ -2,6 +2,8 @@ import { useState } from "react"
 import FormButton from "../../usable/FormButton"
 import FormInput from "../../usable/FormInput"
 import "./Register.css"
+import { useNavigate } from "react-router"
+import { LOGIN } from "../../../constants/routes-constants"
 
 function Register(){
   const [inputData,setInputData] = useState({
@@ -9,6 +11,9 @@ function Register(){
     email : "",
     password : ""
   })
+  const navigate = useNavigate()
+  const [loading,setLoading] = useState(false)
+  const [error,setError] = useState(false)
   const usernameHandle = e => setInputData({
     ...inputData,username : e.target.value})
   const emailHandle = e => setInputData({
@@ -20,6 +25,7 @@ function Register(){
     const submitHandle = async e =>{
       e.preventDefault()
       try{
+        setLoading(true)
         const response = await fetch("/register",{
           method : "POST",
           headers : {
@@ -28,8 +34,14 @@ function Register(){
           body : JSON.stringify(inputData)
         })
         const res = await response.json()
-        console.log(res);
+        if(res.access){
+          navigate(LOGIN)
+        }else{
+          setError(res.message)
+        }
+        setLoading(false)
       }catch(err){
+        setLoading(false)
         console.log(err)
       }
     }
@@ -54,8 +66,11 @@ function Register(){
             value={inputData.password}
             handle={passwordHandle}
           />
+          <br/>
+          <span>{error}</span>
           <FormButton
             text={"Sign up"}
+            loading={loading}
           />
         </form>
     </div>

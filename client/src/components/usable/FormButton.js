@@ -1,6 +1,6 @@
-const FormButton = ({ text })=>{
+const FormButton = ({ text, loading })=>{
   return (
-    <button className="form-button" type="submit">{text}</button>
+    <button className="form-button" type="submit" disabled={loading}>{text}</button>
   )
 }
 export default FormButton
