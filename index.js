@@ -7,6 +7,8 @@ import { log } from "console";
 import jwt from "passport-jwt"
 import passport from "passport"
 import multer from "multer";
+import { PythonShell } from 'python-shell';
+
 const { JwtStrategy, ExtractJwt } = jwt
 
 const storage = multer.diskStorage({
@@ -94,11 +96,21 @@ app.post(REGISTER,async (req,res)=>{
 })
 
 app.post(LOGIN,(req,res)=>{
-  const { email, password } = req.body
-  console.log(email, password);
-  res.send({
-    access : true
+  PythonShell.run("./python-scripts/Terminator/run.py",null).then(result=>{
+    console.log(result)
+    res.send({
+      access : true,
+      message : result[0]
+    })
   })
+  // PythonShell.runString(`print("hello")`,null).then(result=>{
+  //   console.log(result)
+  // })
+  // const { email, password } = req.body
+  // console.log(email, password);
+  // res.send({
+  //   access : true
+  // })
 })
 
 app.listen(process.env.PORT || 5000,()=>{
