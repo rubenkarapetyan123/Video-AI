@@ -1,5 +1,5 @@
 import express from "express";
-import { IMAGE, LOGIN, REGISTER } from "./constants/routes-constants.js";
+import { IMAGE, IS_AUTH, LOGIN, REGISTER } from "./constants/routes-constants.js";
 import fs from "fs"
 import { nanoid } from "nanoid";
 import bcrypt from "bcrypt"
@@ -135,6 +135,14 @@ app.post(LOGIN,async (req,res)=>{
   res.send({
     access : true,
     token,
+  })
+})
+
+app.get(IS_AUTH,passport.authenticate('jwt', { session: false }),(req,res)=>{
+  const user = req.user
+  res.send({
+    access : true,
+    username : user.username
   })
 })
 
