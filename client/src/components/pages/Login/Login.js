@@ -1,5 +1,5 @@
 import { useContext, useState } from "react"
-import { getToken, setToken } from "../../../utils/api-utils"
+import { setToken } from "../../../utils/api-utils"
 import FormButton from "../../usable/FormButton"
 import FormInput from "../../usable/FormInput"
 import { useNavigate } from "react-router"
@@ -11,6 +11,8 @@ function Login(){
     email : "",
     password : ""
   })
+  const [loading,setLoading] = useState(false)
+  const [error,setError] = useState(false)
   const { setUser } = useContext(UserContext)
   const navigate = useNavigate()
   const emailHandle = e => setInputData({
@@ -23,6 +25,7 @@ function Login(){
   const submitHandle = async e =>{
     e.preventDefault()
     try{
+      setLoading(true)
       const response = await fetch("/login",{
         method : "POST",
         headers : {
@@ -38,8 +41,12 @@ function Login(){
           isAuth : true,
           username : res.username
         })
+      }else{
+        setError(res.message)
       }
+      setLoading(false)
     }catch(err){
+      setLoading(false)
       console.log(err)
     }
   }
@@ -59,8 +66,11 @@ function Login(){
             value={inputData.password}
             handle={passwordHandle}
           />
+          <br/>
+          <span>{error}</span>
           <FormButton
             text={"Sign in"}
+            loading={loading}
           />
         </form>
     </div>

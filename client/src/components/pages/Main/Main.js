@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react"
-import FormInput from "../../usable/FormInput"
 import "./Main.css"
 import ImageIcon from "../../../images/ImageIcon.js"
 import { getToken } from "../../../utils/api-utils"
