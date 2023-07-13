@@ -10,6 +10,7 @@ function Router(){
   const { user } = useContext(UserContext)
   return (
     <Routes>
+      <Route path="*" element={<Navigate to={MAIN}/>}/>
       <Route path={LOGIN} element={user.isAuth ? <Navigate to={MAIN}/> : <Login/>}/>
       <Route path={REGISTER} element={user.isAuth ? <Navigate to={MAIN}/> : <Register/>}/>
       <Route path={MAIN} element={!user.isAuth ? <Navigate to={LOGIN}/> : <Main/>}/>

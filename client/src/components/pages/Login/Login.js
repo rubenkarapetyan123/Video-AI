@@ -36,7 +36,7 @@ function Login(){
       const res = await response.json()
       if(res.access){
         setToken(res.token)
-        navigate("/"+MAIN)
+        navigate(MAIN)
         setUser({
           isAuth : true,
           username : res.username

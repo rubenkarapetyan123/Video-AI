@@ -21,7 +21,8 @@
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
     "python-shell": "^5.0.0",
-    "react-icons": "^4.10.1"
+    "react-icons": "^4.10.1",
+    "react-spinners": "^0.13.8"
   },
   "devDependencies": {
     "dotenv": "^16.3.1"

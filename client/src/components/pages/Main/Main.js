@@ -2,18 +2,20 @@ import { useEffect, useState } from "react"
 import "./Main.css"
 import ImageIcon from "../../../images/ImageIcon.js"
 import { getToken } from "../../../utils/api-utils"
+import { FadeLoader } from "react-spinners"
 
 function Main(){
   const [file,setFile] = useState(null)
   const [result,setResult] = useState(null)
+  const [loading,setLoading] = useState(false)
   const chooseFileHandle = async (e)=>{
 
     const formData = new FormData();
     formData.append("image",e.target.files[0])
 
     try{
+      setLoading(true)
       const token = getToken()
-      console.log(token);
       const response = await fetch("/image",{
         method : "POST",
         headers : {
@@ -23,7 +25,9 @@ function Main(){
       })
       const res = await response.json()
       setFile(res.img)
+      setLoading(false)
     }catch(err){
+      setLoading(false)
       console.log(err);
     }
   }
@@ -32,6 +36,7 @@ function Main(){
     async function getResponse(){
       if(file){
         try{
+          setLoading(true)
           const token = getToken()
           const response = await fetch("/image/"+file,{
             method : "GET",
@@ -43,7 +48,9 @@ function Main(){
           if(res.access){
             setResult(res.message)
           }
+          setLoading(false)
         }catch(err){
+          setLoading(false)
           console.log(err);
         }
       }
@@ -54,13 +61,17 @@ function Main(){
 
   return (
     <div className="main-container">
+      {loading ? 
+        <div className="loading-container">
+          <FadeLoader/>
+        </div>
+       : null}
       <div className="img-selector-container">
         <div className="image-load-container">
           {file ? <img src={file} alt="image" className="main-image"/> : <ImageIcon/>}
         </div>
         <input 
           onChange={chooseFileHandle}
-          // value={file}
           type="file"
           className="image-selector"
           accept={".jpg,.jpeg,.png"}

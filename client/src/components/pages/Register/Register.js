@@ -24,6 +24,9 @@ function Register(){
 
     const submitHandle = async e =>{
       e.preventDefault()
+      if(inputData.password.length < 8){
+        return setError("Password must be at least 8 characters long")
+      }
       try{
         setLoading(true)
         const response = await fetch("/register",{
