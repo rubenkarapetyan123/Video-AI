@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import FormInput from "../../usable/FormInput"
 import "./Main.css"
 import ImageIcon from "../../../images/ImageIcon.js"
+import { getToken } from "../../../utils/api-utils"
 
 function Main(){
   const [file,setFile] = useState(null)
@@ -12,11 +13,12 @@ function Main(){
     formData.append("image",e.target.files[0])
 
     try{
+      const token = getToken()
       const response = await fetch("/image",{
         method : "POST",
-        // headers : {
-          // "Content-Type" : "application/json"
-        // },
+        headers : {
+          "Authorization" : `Bearer ${token}`
+        },
         body : formData
       })
       const res = await response.json()
@@ -29,9 +31,21 @@ function Main(){
   useEffect(()=>{
     async function getResponse(){
       if(file){
-        const response = await fetch("/image/"+file)
-        const res = await response.json()
-        setResult(res.message)
+        try{
+          const token = getToken()
+          const response = await fetch("/image/"+file,{
+            method : "GET",
+            headers : {
+              "Authorization" : `Bearer ${token}`
+            },
+          })
+          const res = await response.json()
+          if(res.access){
+            setResult(res.message)
+          }
+        }catch(err){
+          console.log(err);
+        }
       }
     }
     getResponse()

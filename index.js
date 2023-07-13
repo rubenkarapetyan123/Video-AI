@@ -38,7 +38,7 @@ const config = {
 
 passport.use(new JwtStrategy(config, function(payload, done) {
   try {
-    const users = fs.readFileSync("./database/users.json",{encoding : "utf8", flag : "r"})
+    const users = JSON.parse(fs.readFileSync("./database/users.json",{encoding : "utf8", flag : "r"}))
     const user = users[payload.sub]
     if (user) {
       return done(null, user);
@@ -53,14 +53,14 @@ passport.use(new JwtStrategy(config, function(payload, done) {
   }
 }))
 
-app.post(IMAGE,upload.single("image"),(req,res)=>{
+app.post(IMAGE,upload.single("image"),passport.authenticate('jwt', { session: false }),(req,res)=>{
   res.send({
     access : true,
     img : req.file.filename
   })
 })
 
-app.get(IMAGE+"/:name",(req,res)=>{
+app.get(IMAGE+"/:name",passport.authenticate('jwt', { session: false }),(req,res)=>{
   const { name } = req.params
   PythonShell.run("./python-scripts/Terminator/run.py",{
     args : [name]
@@ -131,8 +131,7 @@ app.post(LOGIN,async (req,res)=>{
     })
   }
 
-  const token = jwtToken.sign(user,process.env.JWT_SECRET)
-
+  const token = jwtToken.sign({sub : user.id},process.env.JWT_SECRET)
   res.send({
     access : true,
     token,

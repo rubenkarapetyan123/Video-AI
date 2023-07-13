@@ -1,13 +1,16 @@
 import { useState } from "react"
-import { setToken } from "../../../utils/api-utils"
+import { getToken, setToken } from "../../../utils/api-utils"
 import FormButton from "../../usable/FormButton"
 import FormInput from "../../usable/FormInput"
+import { useNavigate } from "react-router"
+import { MAIN } from "../../../constants/routes-constants"
 
 function Login(){
   const [inputData,setInputData] = useState({
     email : "",
     password : ""
   })
+  const navigate = useNavigate()
   const emailHandle = e => setInputData({
     ...inputData,email : e.target.value})
   const passwordHandle = e => setInputData({
@@ -15,22 +18,25 @@ function Login(){
 
 
 
-    const submitHandle = async e =>{
-      e.preventDefault()
-      try{
-        const response = await fetch("/login",{
-          method : "POST",
-          headers : {
-            "Content-Type" : "application/json"
-          },
-          body : JSON.stringify(inputData)
-        })
-        const res = await response.json()
+  const submitHandle = async e =>{
+    e.preventDefault()
+    try{
+      const response = await fetch("/login",{
+        method : "POST",
+        headers : {
+          "Content-Type" : "application/json",
+        },
+        body : JSON.stringify(inputData)
+      })
+      const res = await response.json()
+      if(res.access){
         setToken(res.token)
-      }catch(err){
-        console.log(err)
+        navigate("/"+MAIN)
       }
+    }catch(err){
+      console.log(err)
     }
+  }
 
 
   return (
