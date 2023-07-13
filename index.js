@@ -35,7 +35,22 @@ const config = {
   secretOrKey : process.env.JWT_SECRET,
 }
 
-
+passport.use(new JwtStrategy(config, function(payload, done) {
+  try {
+    const users = fs.readFileSync("./database/users.json",{encoding : "utf8", flag : "r"})
+    const user = users[payload.sub]
+    if (user) {
+      return done(null, user);
+    }else {
+      return done(null, false);
+    }
+  }catch(err){
+    if (err) {
+      return done(err, false);
+    }
+    console.log(err)
+  }
+}))
 
 app.post(IMAGE,upload.single("image"),(req,res)=>{
   res.send({
