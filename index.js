@@ -8,8 +8,9 @@ import jwt from "passport-jwt"
 import passport from "passport"
 import multer from "multer";
 import { PythonShell } from 'python-shell';
+import jwtToken from "jsonwebtoken"
 
-const { JwtStrategy, ExtractJwt } = jwt
+const { Strategy:JwtStrategy, ExtractJwt } = jwt
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -104,15 +105,38 @@ app.post(REGISTER,async (req,res)=>{
   })
 })
 
-app.post(LOGIN,(req,res)=>{
-  // PythonShell.runString(`print("hello")`,null).then(result=>{
-  //   console.log(result)
-  // })
-  // const { email, password } = req.body
-  // console.log(email, password);
-  // res.send({
-  //   access : true
-  // })
+app.post(LOGIN,async (req,res)=>{
+
+  const { email, password } = req.body
+  const users = JSON.parse(fs.readFileSync("./database/users.json",{encoding : "utf8",flag : "r"}))
+
+  let user
+  for(let i in users){
+    if(email === users[i].email){
+      user=users[i]
+    }
+  }
+
+  if(!user){
+    return res.send({
+      access : false,
+      message : "incorrect email"
+    })
+  }
+  const isValidPassword = await bcrypt.compare(password,user.password)
+  if(!isValidPassword){
+    return res.send({
+      access : false,
+      message : "incorrect password"
+    })
+  }
+
+  const token = jwtToken.sign(user,process.env.JWT_SECRET)
+
+  res.send({
+    access : true,
+    token,
+  })
 })
 
 app.listen(process.env.PORT || 5000,()=>{

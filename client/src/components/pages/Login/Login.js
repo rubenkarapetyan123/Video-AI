@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { setToken } from "../../../utils/api-utils"
 import FormButton from "../../usable/FormButton"
 import FormInput from "../../usable/FormInput"
 
@@ -25,7 +26,7 @@ function Login(){
           body : JSON.stringify(inputData)
         })
         const res = await response.json()
-        console.log(res);
+        setToken(res.token)
       }catch(err){
         console.log(err)
       }
