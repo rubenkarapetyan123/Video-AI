@@ -35,30 +35,24 @@ const config = {
   secretOrKey : process.env.JWT_SECRET,
 }
 
-// passport.use(new JwtStrategy(config, function(payload, done) {
-  // const users = fs.readFileSync("./database/users.json",{encoding : "utf8", flag : "r"})
-  // const user = users[payload.sub]
-  // if(!user){
-  //   return done()
-  // }
-  // User.findOne({id: jwt_payload.sub}, function(err, user) {
-  //     if (err) {
-  //         return done(err, false);
-  //     }
-  //     if (user) {
-  //         return done(null, user);
-  //     } else {
-  //         return done(null, false);
-  //         // or you could create a new account
-  //     }
-  // })
-// }))
+
 
 app.post(IMAGE,upload.single("image"),(req,res)=>{
-  console.log(req.file);
   res.send({
     access : true,
     img : req.file.filename
+  })
+})
+
+app.get(IMAGE+"/:name",(req,res)=>{
+  const { name } = req.params
+  PythonShell.run("./python-scripts/Terminator/run.py",{
+    args : [name]
+  }).then(result=>{
+    res.send({
+      access : true,
+      message : result[0]
+    })
   })
 })
 
@@ -96,13 +90,6 @@ app.post(REGISTER,async (req,res)=>{
 })
 
 app.post(LOGIN,(req,res)=>{
-  PythonShell.run("./python-scripts/Terminator/run.py",null).then(result=>{
-    console.log(result)
-    res.send({
-      access : true,
-      message : result[0]
-    })
-  })
   // PythonShell.runString(`print("hello")`,null).then(result=>{
   //   console.log(result)
   // })

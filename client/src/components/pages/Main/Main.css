@@ -1,6 +1,7 @@
 .main-container{
   display: flex;
   align-items: center;
+  flex-direction: column;
   justify-content: center;
   margin-top: 100px;
 }
@@ -60,4 +61,14 @@
 }
 .image-selector:active::before {
   background: -webkit-linear-gradient(top, #e3e3e3, #f9f9f9);
+}
+
+.result-container{
+  margin-top: 20px;
+  width: 400px;
+  min-height: 20px;
+  height: fit-content;
+  padding: 20px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  border-radius: 5px;
 }

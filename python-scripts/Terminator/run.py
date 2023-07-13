@@ -2,8 +2,9 @@ from tensorflow.keras.models import Sequential, model_from_yaml
 from tensorflow.keras.models import load_model
 
 import cv2
-
 import pickle
+
+import sys
 
 with open('/Users/user/Desktop/Video-AI/python-scripts/Terminator/tokens.pickle', 'rb') as handle:
     tokens = pickle.load(handle)
@@ -11,7 +12,6 @@ with open('/Users/user/Desktop/Video-AI/python-scripts/Terminator/tokens.pickle'
 # print(tokens)
 
 def text_to_token(tokens_data):
-
 
   tokens={}
   tok={}
@@ -149,7 +149,11 @@ def vectorize_img(img):
       arr.append((j*3.921)/1000)
   return arr
 
-image = url_to_image("/Users/user/Desktop/Video-AI/images/image-9rxuWFK0.png",50)
+
+image_name = sys.argv[1]
+
+
+image = url_to_image("/Users/user/Desktop/Video-AI/images/"+image_name,50)
 # print(img)
 # image = cv2.imread("C://Users//User//Desktop//Terminator//tets.jpg", cv2.IMREAD_COLOR) 
 

@@ -1,12 +1,12 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import FormInput from "../../usable/FormInput"
 import "./Main.css"
 import ImageIcon from "../../../images/ImageIcon.js"
 
 function Main(){
   const [file,setFile] = useState(null)
+  const [result,setResult] = useState(null)
   const chooseFileHandle = async (e)=>{
-    console.log(e.target.files[0]);
 
     const formData = new FormData();
     formData.append("image",e.target.files[0])
@@ -21,11 +21,23 @@ function Main(){
       })
       const res = await response.json()
       setFile(res.img)
-      console.log(res);
     }catch(err){
       console.log(err);
     }
   }
+
+  useEffect(()=>{
+    async function getResponse(){
+      if(file){
+        const response = await fetch("/image/"+file)
+        const res = await response.json()
+        setResult(res.message)
+      }
+    }
+    getResponse()
+
+  },[file])
+
   return (
     <div className="main-container">
       <div className="img-selector-container">
@@ -40,6 +52,9 @@ function Main(){
           accept={".jpg,.jpeg,.png"}
         />
       </div>
+      {result ? <div className="result-container">
+        <p>{result}</p>
+      </div> : null}
     </div>
   )
 }
