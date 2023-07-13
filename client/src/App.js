@@ -20,7 +20,6 @@ function App() {
       try{
         const response = await fetch("/isauth",{headers : {"Authorization" : `Bearer ${token}`}})
         const res = await response.json()
-        console.log(res);
         if(res.access){
           setUser({
             isAuth : true,

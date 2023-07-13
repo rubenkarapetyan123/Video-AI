@@ -26,3 +26,9 @@
 .form-button:hover{
   background-color: var(--violet);
 }
+
+@media (max-width: 332px) {
+  .form-input{
+    width: 200px;
+  }
+}

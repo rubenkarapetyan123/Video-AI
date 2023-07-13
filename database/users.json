@@ -1,8 +1,24 @@
 {
   "1uw4Lnnz": {
     "username": "ara",
-    "id" : "1uw4Lnnz",
+    "id": "1uw4Lnnz",
     "email": "ara@gmail.com",
     "password": "$2b$10$XwORGXPe/1sgEKM2SdpAAelxtkePLKtNJ8luwOxMwAiX.GnKeGkIS"
+  },
+  "eO9lmziG": {
+    "username": "Hayko",
+    "email": "mail@mail.com",
+    "password": "$2b$10$IWs8t/fjso0SbnRzrhztDuDP.ABC4jcz/l2lxTZYOfYD24fnErbyS"
+  },
+  "flDYrXyx": {
+    "username": "Yeghishe Harutyunyan ",
+    "email": "ya_lublu_kampot@gmail.cam",
+    "password": "$2b$10$Knuu7QEe0mCzOk/kyzG5Veofb4JIQ6QwZshlDIT6qz7nAu1Yu4gAa"
+  },
+  "h30WapBn": {
+    "username": "Gglo Valod",
+    "email": "gglo@gmail.com",
+    "password": "$2b$10$NbTn8qZW.vb10OeaB4PFq.Q/.6yDPS82H9V9gSLPPyHlzORk6CL3q",
+    "id": "h30WapBn"
   }
 }

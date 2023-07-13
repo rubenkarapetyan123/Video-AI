@@ -1,15 +1,17 @@
-import { useState } from "react"
+import { useContext, useState } from "react"
 import { getToken, setToken } from "../../../utils/api-utils"
 import FormButton from "../../usable/FormButton"
 import FormInput from "../../usable/FormInput"
 import { useNavigate } from "react-router"
 import { MAIN } from "../../../constants/routes-constants"
+import { UserContext } from "../../../App"
 
 function Login(){
   const [inputData,setInputData] = useState({
     email : "",
     password : ""
   })
+  const { setUser } = useContext(UserContext)
   const navigate = useNavigate()
   const emailHandle = e => setInputData({
     ...inputData,email : e.target.value})
@@ -32,6 +34,10 @@ function Login(){
       if(res.access){
         setToken(res.token)
         navigate("/"+MAIN)
+        setUser({
+          isAuth : true,
+          username : res.username
+        })
       }
     }catch(err){
       console.log(err)

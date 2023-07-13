@@ -1,5 +1,5 @@
 import express from "express";
-import { IMAGE, IS_AUTH, LOGIN, REGISTER } from "./constants/routes-constants.js";
+import { IMAGE, IS_AUTH, LOGIN, LOGOUT, REGISTER } from "./constants/routes-constants.js";
 import fs from "fs"
 import { nanoid } from "nanoid";
 import bcrypt from "bcrypt"
@@ -92,7 +92,8 @@ app.post(REGISTER,async (req,res)=>{
   users[id] = {
     username,
     email,
-    password : await bcrypt.hash(password,10)
+    password : await bcrypt.hash(password,10),
+    id
   }
 
   fs.writeFileSync("./database/users.json",JSON.stringify(users,undefined,2))
@@ -135,6 +136,7 @@ app.post(LOGIN,async (req,res)=>{
   res.send({
     access : true,
     token,
+    username : user.username
   })
 })
 
@@ -143,6 +145,13 @@ app.get(IS_AUTH,passport.authenticate('jwt', { session: false }),(req,res)=>{
   res.send({
     access : true,
     username : user.username
+  })
+})
+
+app.get(LOGOUT,(req,res)=>{
+  req.Authorization = null
+  res.send({
+    access : true
   })
 })
 

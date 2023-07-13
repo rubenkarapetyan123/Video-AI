@@ -14,6 +14,7 @@ function Main(){
 
     try{
       const token = getToken()
+      console.log(token);
       const response = await fetch("/image",{
         method : "POST",
         headers : {

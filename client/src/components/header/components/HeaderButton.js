@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom"
 
 
-const HeaderButton =({ text, route, className })=>{
+const HeaderButton =({ text, route, className, handle })=>{
   return (
-    <Link className={className + " header-button"} to={route}>{text}</Link>
+    <Link className={className + " header-button"} to={route} onClick={handle}>{text}</Link>
   )
 }
 
