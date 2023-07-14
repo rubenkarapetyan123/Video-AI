@@ -38,5 +38,17 @@
     "email": "a@gam.d",
     "password": "$2b$10$2MfUBRi6Vca/SqRDylorcOhVOHAd3afjE/x14dqP.cW2KeTAAQt..",
     "id": "BaKixMQC"
+  },
+  "aJVoJzVU": {
+    "username": "a",
+    "email": "a@gmail.com",
+    "password": "$2b$10$19e0ytdVVFauK1Yg7mOJPuwGS2Nr0wgJUo0ZAbwAfN3B7iNeDpa/W",
+    "id": "aJVoJzVU"
+  },
+  "lWH6xihu": {
+    "username": "tumo_user",
+    "email": "example@tumo.org",
+    "password": "$2b$10$sWCfUQ2bnYp7.nyEbvE2qOTEqr9k0BYFKcoXHgNyT249hKkljJJci",
+    "id": "lWH6xihu"
   }
 }

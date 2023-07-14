@@ -1,166 +1,99 @@
-from tensorflow.keras.models import Sequential, model_from_yaml
-from tensorflow.keras.models import load_model
-
-import cv2
-import pickle
-
+from pickle import load
+from numpy import argmax
+from tensorflow.keras.preprocessing.sequence import pad_sequences
+from keras.applications.vgg16 import VGG16
+from tensorflow.keras.preprocessing.image import load_img
+from tensorflow.keras.preprocessing.image import img_to_array
+from keras.applications.vgg16 import preprocess_input
+from keras.models import Model
+from keras.models import load_model
 import sys
 
-with open('/Users/user/Desktop/Video-AI/python-scripts/Terminator/tokens.pickle', 'rb') as handle:
-    tokens = pickle.load(handle)
- 
-# print(tokens)
+import ssl
 
-def text_to_token(tokens_data):
+ssl._create_default_https_context = ssl._create_unverified_context
 
-  tokens={}
-  tok={}
-  g=0
+# extract features from each photo in the directory
+def extract_features(filename):
+	# load the model
+	model = VGG16()
+	# re-structure the model
+	model = Model(inputs=model.inputs, outputs=model.layers[-2].output)
+	# load the photo
+	image = load_img(filename, target_size=(224, 224))
+	# convert the image pixels to a numpy array
+	image = img_to_array(image)
+	# reshape data for the model
+	image = image.reshape((1, image.shape[0], image.shape[1], image.shape[2]))
+	# prepare the image for the VGG model
+	image = preprocess_input(image)
+	# get features
+	feature = model.predict(image, verbose=0)
+	return feature
 
-  is_two=False
-  for i in tokens_data:
-    for j in i:
-      if len(j)<25:
-        if None == tokens.get(j):
-          tokens[j]={}
-        is_two=False
-        for jj in i:
-            if len(jj)<25 and is_two:
+# map an integer to a word
+def word_for_id(integer, tokenizer):
+	for word, index in tokenizer.word_index.items():
+		if index == integer:
+			return word
+	return None
 
-              if None == tokens[j].get(jj):
-                tokens[j][jj]=1
-                ##print(tokens[j][[jj]])
-              else:
-                tokens[j][jj]+=1
-            is_two=True
-
-    if g==100:
-      g=0
-      for k in tokens:
-        for kk in list(tokens[k]):
-          if tokens[k][kk] ==1:
-            tokens[k].pop(kk)
-    g+=1
-
-  return tokens
-
-def print_tokens(tokens,num_collumn):
-  g=0
-  for i in tokens:
-    if g==num_collumn:
-      g=0
-      print(i + ":  " + str(tokens.get(i))+"   |   ")
-    else:
-      print(i + ":  " + str(tokens.get(i))+"   |   ",end="")
-    g+=1
-
-def vectorize_tokens(tokens, token):
-    arr = []
-    for i in tokens:
-        if i == token:
-            arr.append(1)
-        else:
-            arr.append(0)
-    return arr
-
-def vectorize_tokens_tok(tokens,tokens_data,token):
-  arr=[]
-  is_true = False
-  for i in tokens_data:
-
-    for j in i:
-      if j == token:
-        is_true = True
-    if(is_true):
-      is_true = False
-      for i in tokens:
-          if i == token:
-            arr.append(1)
-
-          else:
-            g = tokens[token].get(i)
-            if g == None:
-              arr.append(0)
-            else:
-              arr.append(g/100)
-      return arr
+# generate a description for an image
+def generate_desc(model, tokenizer, photo, max_length):
+	# seed the generation process
+	in_text = 'startseq'
+	# iterate over the whole length of the sequence
+	for i in range(max_length):
+		# integer encode input sequence
+		sequence = tokenizer.texts_to_sequences([in_text])[0]
+		# pad input
+		sequence = pad_sequences([sequence], maxlen=max_length)
+		# predict next word
+		yhat = model.predict([photo,sequence], verbose=0)
+		# convert probability to integer
+		yhat = argmax(yhat)
+		# map integer to word
+		word = word_for_id(yhat, tokenizer)
+		# stop if we cannot map the word
+		if word is None:
+			break
+		# append as input for generating the next word
+		in_text += ' ' + word
+		# stop if we predict the end of the sequence
+		if word == 'endseq':
+			break
+	return in_text
 
 
-def vetorize_string(tokens,string):
-    arr=[]
-    is_str=False
-    g=1
-    for i in tokens:
-        for j in string.split():
-            # print(j)
-            if i == j:
-                # print(i)
-                is_str = True
-        if is_str:
-            is_str=False
-            arr.append(1-(g/1000))
-        else:
-            arr.append(0)
-        g+=1
-    return arr
+import pathlib
+from pathlib import Path
+dir_path = pathlib.Path.cwd()
+path_tokenizer = Path(dir_path, 'python-scripts','Terminator', 'tokenizer.pkl')
+
+path_model = Path(dir_path, 'python-scripts','Terminator', 'model-ep003-loss3.904-val_loss4.270.h5')
 
 
-def vector_to_string(tokens,vector):
-    # print(vector[0])
-    dt = []
-    arr=" "
-    g=0
-    num =0.00023
-    word ="none"
-    for i in tokens:
-        # print(i)
-        # print(vector[g])
+def path_image_creater(image):
+	path_image = Path(dir_path, 'images', image)
+	return path_image 
 
-        if vector[g]>num:
-          word = i
+# # load the tokenizer
+tokenizer = load(open(path_tokenizer , 'rb'))
+# pre-define the max sequence length (from training)
+max_length = 28
 
-          dt.append(i)
-
-          # print(i)
-        g+=1
-
-    for i in range(len(dt)):
-      arr+=dt[len(dt)-1-i]+" "
-
-    return arr
+# # load the model
+model = load_model(path_model)
 
 
-
-def url_to_image(url, scale,readFlag= cv2.IMREAD_GRAYSCALE):
-    # download the image, convert it to a NumPy array, and then read
-    # it into OpenCV format
-    try:
-        image = cv2.imread(url, cv2.IMREAD_COLOR) 
-        image =cv2.resize(image, (scale, scale) )
-        image = cv2.Canny(image,90, 90)
-        return image
-    except:
-      print(url)
-
-def vectorize_img(img):
-  arr =[]
-  for i in img:
-    for j in i:
-      arr.append((j*3.921)/1000)
-  return arr
+# LOAD IMAGE  
 
 
 image_name = sys.argv[1]
+photo = extract_features(path_image_creater(image_name))
 
 
-image = url_to_image("/Users/user/Desktop/Video-AI/images/"+image_name,50)
-# print(img)
-# image = cv2.imread("C://Users//User//Desktop//Terminator//tets.jpg", cv2.IMREAD_COLOR) 
 
-# print(image)
-
-img_v= vectorize_img(image)
-new_model = load_model("/Users/user/Desktop/Video-AI/python-scripts/Terminator/model_v1.0.h5")
-
-output=new_model.predict((img_v,),batch_size=64,verbose=0)
-print(vector_to_string(tokens,output[0]))
+# GENERATE DESCRIPTION !!
+old_d = generate_desc(model, tokenizer, photo, max_length)
+print(old_d[9:-6])

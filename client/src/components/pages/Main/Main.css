@@ -10,7 +10,8 @@
   display: flex;
   flex-direction: column;
   width: 400px;
-  height: 350px;
+  min-height: 350px;
+  height: fit-content; 
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
   border-radius: 5px;
 }
